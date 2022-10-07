@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:premierleague/PremierLeagueModel.dart';
-import 'package:premierleague/detail.dart';
+import 'package:premierleague/page/detail.dart';
 
 class DetailPage extends StatefulWidget {
   DetailPage({Key? key, required this.teams}) : super(key: key);

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:favorite_button/favorite_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:premierleague/PremierLeagueModel.dart';
+import 'package:premierleague/favDB.dart';
+import 'package:premierleague/favModel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class detail extends StatefulWidget {
@@ -15,6 +18,9 @@ class detail extends StatefulWidget {
 }
 
 class _detailState extends State<detail> {
+  bool checkExist = false;
+  Color colorChecked = Colors.grey;
+
   Future<void> _launchInBrowser(String url) async {
     var uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -22,6 +28,39 @@ class _detailState extends State<detail> {
     } else {
       throw Exception("Error");
     }
+  }
+
+  Future read() async {
+    checkExist = await FavDatabase.instance.read(widget.teams!.strTeam);
+    setState(() {});
+  }
+
+  Future addData() async {
+    var fav;
+    fav = FavoriteModel(
+        image: widget.teams!.strTeamBadge.toString(),
+        name: widget.teams!.strTeam.toString(),
+        julukan: widget.teams!.strKeywords.toString(),
+        since: widget.teams!.intFormedYear.toString());
+    await FavDatabase.instance.create(fav);
+    setState(() {
+      checkExist = true;
+    });
+    // Navigator.pop(context);
+  }
+
+  Future deleteData() async {
+    await FavDatabase.instance.delete(widget.teams!.strTeam);
+    setState(() {
+      checkExist = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    read();
   }
 
   @override
@@ -38,9 +77,6 @@ class _detailState extends State<detail> {
                 Navigator.pop(context);
               },
             ),
-            actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border))
-            ],
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -108,7 +144,21 @@ class _detailState extends State<detail> {
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                Spacer(),
+                                IconButton(
+                                    icon: Icon(Icons.favorite, size: 30),
+                                    color:
+                                        checkExist ? Colors.red : colorChecked,
+                                    onPressed: () {
+                                      checkExist ? deleteData() : addData();
+                                    }),
+                                // FavoriteButton(
+                                //   valueChanged: (_) {
+                                //     addData();
+                                //   },
+                                //   iconSize: 45,
+                                // ),
                               ],
                             ),
                           ),
@@ -309,7 +359,7 @@ class _detailState extends State<detail> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

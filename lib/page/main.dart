@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:premierleague/detail.dart';
+import 'package:premierleague/page/detail.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:premierleague/page/fav.dart';
 
-import 'package:premierleague/home.dart';
-import 'package:premierleague/splashscreen.dart';
+import 'package:premierleague/page/home.dart';
+import 'package:premierleague/page/splashscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
       debugShowCheckedModeBanner: false,
-      home: splashscreen(),
+      home: home(),
     );
   }
 }
